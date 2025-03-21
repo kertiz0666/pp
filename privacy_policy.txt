@@ -1,0 +1,32 @@
+Privacy Policy - Fast Translator by Jakubix
+
+1. Introduction
+This Privacy Policy aims to inform users of the "Fast Translator by Jakubix" extension (hereinafter referred to as the "Extension") about how data is processed when using the Extension.
+
+2. No Data Collection
+The Extension does not collect, store, or transmit any user data to external servers. All operations performed by the Extension take place locally on the user's device.
+
+3. Local Data Storage
+The Extension uses the browser's local storage (localStorage) exclusively to store user preferences, such as:
+- Selected language pairs,
+- Translator window position and size,
+- Favorite language pairs.
+
+This data is not shared or sent to external servers – it remains on the user's device.
+
+4. Processing of Text for Translation
+- Text entered by the user is transmitted to an external API service solely for the purpose of performing the translation.
+- After receiving the translation, the text is not stored by either the server or the Extension.
+- The Extension acts solely as an intermediary that forwards the text for translation and displays the result to the user.
+
+5. Required Permissions
+The Extension requires the following permissions:
+- storage – to save local user preferences,
+- clipboardWrite – to copy translations to the clipboard,
+- activeTab – to access selected text on the current page.
+
+None of these permissions are used to collect or share user data.
+
+6. Contact
+If you have any questions regarding privacy, please contact us at:
+📧 jsledzikowski.web@gmail.com
