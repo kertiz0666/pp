@@ -22,6 +22,38 @@ try {
   }
 }
 
+Konfiguracja
+ * xdB.config({ basePath: '...' }): Ustawia bazową ścieżkę dla wszystkich operacji.
+ * xdB.getBasePath(): Pobiera aktualnie skonfigurowaną, absolutną ścieżkę bazową.
+Operacje na Katalogach (xdB.dir)
+ * add(dirPath): Tworzy katalog (wraz z nadrzędnymi). Zwraca Promise<{path: string}>.
+ * del(dirPath): Usuwa katalog rekurencyjnie. Zwraca Promise<{path: string}>. Rzuca XDB_DIR_NOT_FOUND.
+ * rename(oldPath, newPath): Zmienia nazwę lub przenosi katalog. Zwraca Promise<{oldPath: string, newPath: string}>. Rzuca XDB_DIR_NOT_FOUND.
+Operacje Przenoszenia (xdB.move)
+ * file(sourcePath, targetPath): Przenosi/zmienia nazwę pliku (automatycznie dodaje .json). Zapewnia istnienie katalogu docelowego. Zwraca Promise<{source: string, target: string}>. Rzuca XDB_FILE_NOT_FOUND.
+ * dir(sourcePath, targetPath): Przenosi/zmienia nazwę katalogu (jak xdB.dir.rename). Zwraca Promise<{source: string, target: string}>. Rzuca XDB_DIR_NOT_FOUND.
+Operacje Edycji (xdB.edit)
+ * all(filePath, newData): Atomowo nadpisuje całą zawartość pliku JSON (tablicą lub obiektem). Tworzy plik, jeśli nie istnieje. Zwraca Promise<{path: string}>.
+ * id(filePath, id, newRecord): Atomowo edytuje określony rekord (wg id) w pliku JSON (musi być tablicą obiektów). newRecord zawiera pola do aktualizacji. Zwraca Promise<{path: string, record: object}>. Rzuca XDB_FILE_NOT_FOUND, XDB_INVALID_JSON, XDB_RECORD_NOT_FOUND.
+Operacje Usuwania (xdB.del)
+ * all(filePath): Atomowo opróżnia zawartość pliku JSON, zastępując ją pustą tablicą []. Nie usuwa samego pliku. Zwraca Promise<{path: string}>. Rzuca XDB_FILE_NOT_FOUND.
+ * id(filePath, id): Atomowo usuwa rekord (wg id) z pliku JSON (musi być tablicą obiektów). Zwraca Promise<{path: string, deletedId: number}>. Rzuca XDB_FILE_NOT_FOUND, XDB_INVALID_JSON, XDB_RECORD_NOT_FOUND.
+Operacje Dodawania (xdB.add)
+ * all(filePath, initialData = [], options = { overwrite: true }): Atomowo tworzy nowy plik JSON z danymi początkowymi. Jeśli overwrite: false, rzuca błąd (XDB_OPERATION_FAILED), gdy plik istnieje. Zwraca Promise<{path: string}>.
+ * id(filePath, newRecord): Atomowo dodaje nowy rekord do pliku JSON (musi być tablicą obiektów). Tworzy plik, jeśli nie istnieje. Generuje unikalne numeryczne ID, jeśli newRecord.id nie jest podane. Zwraca Promise<{path: string, record: object}>. Rzuca XDB_RECORD_EXISTS (jeśli podano istniejące ID), XDB_INVALID_JSON.
+Operacje Odczytu (xdB.view)
+ * all(filePath): Odczytuje i zwraca całą sparsowaną zawartość pliku JSON. Zwraca Promise<{path: string, data: Array|object}>. Rzuca XDB_FILE_NOT_FOUND, XDB_INVALID_JSON.
+ * id(filePath, id): Odczytuje i zwraca konkretny rekord (wg id) z pliku JSON (musi być tablicą obiektów). Zwraca Promise<{path: string, record: object}>. Rzuca XDB_FILE_NOT_FOUND, XDB_INVALID_JSON, XDB_RECORD_NOT_FOUND.
+ * more(filePath, options = {}): Odczytuje dane z pliku JSON (tablicy obiektów) z zaawansowanymi opcjami:
+   * filter (function(record): boolean): Funkcja filtrująca rekordy.
+   * sort (object | Array<object>): Kryteria sortowania, np. {key: 'name', order: 'asc'} lub [{key: 'city'}, {key: 'name', order: 'desc'}]. Opcjonalny comparator.
+   * skip (number): Liczba rekordów do pominięcia (dla paginacji).
+   * limit (number): Maksymalna liczba rekordów do zwrócenia (dla paginacji).
+     Zwraca Promise<Array<object>>. Rzuca XDB_FILE_NOT_FOUND, XDB_INVALID_JSON.
+Kontrola Współbieżności
+Wewnętrzny mechanizm blokad plików (oparty na Map i Promise) zapobiega konfliktom podczas jednoczesnych operacji zapisu (edit.*, del.*, add.*, move.*, dir.del, dir.rename) do tego samego pliku. Operacje odczytu (view.*) nie blokują, ale odczytują spójny stan pliku w momencie operacji.
+Funkcje Pomocnicze
+Biblioteka zawiera wewnętrzne funkcje pomocnicze (np. ensureJsonExtension, safeParseJSON, validateId, createXdbError), które generalnie nie są przeznaczone do bezpośredniego użytku zewnętrznego.
 
 
 
