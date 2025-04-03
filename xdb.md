@@ -1,3 +1,33 @@
+# xdB - Dokumentacja Techniczna (Skrócona)
+
+## Wprowadzenie
+
+**xdB** to biblioteka Node.js do zarządzania prostymi bazami danych opartymi na plikach JSON. Umożliwia operacje **CRUD** (Create, Read, Update, Delete) na plikach i rekordach, zarządzanie katalogami, wykorzystując asynchroniczne operacje I/O systemu plików i podstawowe **blokady plików** dla kontroli współbieżności. Automatycznie dodaje rozszerzenie `.json` do ścieżek plików, jeśli jest pominięte.
+
+## Kody Błędów
+
+Biblioteka definiuje specyficzne kody błędów (np. `XDB_FILE_NOT_FOUND`, `XDB_RECORD_NOT_FOUND`, `XDB_INVALID_JSON`) ułatwiające obsługę błędów.
+
+```javascript
+// Przykład użycia
+import xdB, { XDB_ERROR_CODES } from './xdb.js'; // Zakładając import
+
+try {
+  // operacja xdB
+} catch (error) {
+  if (error.code === XDB_ERROR_CODES.FILE_NOT_FOUND) {
+    console.error("Plik nie został znaleziony:", error.message);
+  } else {
+    console.error("Błąd xdB:", error.code, error.message);
+  }
+}
+
+
+
+
+
+
+----------
 # xdB - Dokumentacja Techniczna
 
 ## Wprowadzenie (Introduction)
